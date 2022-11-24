@@ -13,6 +13,7 @@ const char* mqtt_server = "142.93.174.193";
 
 const char* topic1 = "zuerich/lift/lightsensor";
 const char* topic2 = "zuerich/lift/button";
+const char* topic3 = "zuerich/lift/conformation";
 
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -69,12 +70,12 @@ void reconnect() {
 }
 
 void pressButton(){
-  servo.write(135);
-  delay(SPIN_TIME);
+  servo.write(110);
+  delay(300);
   servo.write(90);
   delay(50);
   servo.write(45);
-  delay(SPIN_TIME);
+  delay(150);
   servo.write(90);
 }
 
