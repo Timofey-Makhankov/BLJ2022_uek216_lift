@@ -5,7 +5,7 @@ char mac[17];
 const char* ssid = "GuestWLANPortal";
 const char* mqtt_server = "142.93.174.193";
 
-const char* topic1 = "m216demo/lift/sensor2";
+const char* topic1 = "zuerich/lift/sensorzwei";
 
 #define LIGHT 33
 
@@ -50,8 +50,9 @@ void reconnect() {
 void loop() {
   if (!client.connected()) { reconnect(); }
   char tempBuffer[15];
-  Serial.println(analogRead(LIGHT));
-  sprintf(tempBuffer, "%f", analogRead(LIGHT));
+  float result = analogRead(LIGHT);
+  Serial.println(result);
+  sprintf(tempBuffer, "%f", result);
   client.publish(topic1, tempBuffer);
   delay(500);
   client.loop();
