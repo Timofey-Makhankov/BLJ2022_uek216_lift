@@ -1,22 +1,22 @@
 #include <WiFi.h>
 #include <PubSubClient.h>
-#include <Servo.h>
+#include <Adafruit_SSD1306.h>
 
-#define SERVO_PIN 15
-#define LIGHT_PIN 33
+#define BUTTON 15
+#define LED 33
 
 char mac[17];
 const char* ssid = "GuestWLANPortal";
 const char* mqtt_server = "142.93.174.193";
 
-const char* topic1 = "zuerich/lift/lightsensor";
-const char* topic2 = "zuerich/lift/button";
-const char* topic3 = "zuerich/lift/conformation";
+const char* topic1 = "zuerich/lift/local/button";
+const char* topic2 = "zuerich/lift/local/led";
+const char* topic3 = "zuerich/lift/status";
 
 WiFiClient espClient;
 PubSubClient client(espClient);
 
-Servo servo;
+Adafruit_SSD1306 display(128, 32, &Wire, -1);
 
 void setup() {
   Serial.begin(115200);
@@ -24,10 +24,12 @@ void setup() {
   client.setServer(mqtt_server, 1883);
   client.setCallback(callback);
 
-  servo.attach(SERVO_PIN);
-  servo.write(90);
+  pinMode(BUTTON, INPUT);
+  pinMode(LED, OUTPUT);
 
-  pinMode(LIGHT_PIN, INPUT);
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
 }
 
 void setup_wifi() {
@@ -47,20 +49,26 @@ void setup_wifi() {
 void callback(char* topic, byte* payload, unsigned int length) {
   Serial.println("recieved");
   if (strcmp(topic, topic2) == 0) {
-    if (atoi((char*)payload) == 1){
-      pressButton();
+    if (atoi((char*)payload) == 1) {
+      blinkLed();
     }
+  }
+  if (strcmp(topic, topic3) == 0) {
+    display.clearDisplay();
+    display.setCursor(0, 0);
+    //display.print((char*)payload);
+    display.display();
+    delay(100);
   }
 }
 
 void reconnect() {
   Serial.print("Attempting MQTT connection...");
   while (!client.connected()) {
-    if (client.connect("lift1")) {
+    if (client.connect("lift")) {
       Serial.println("done!");
       client.subscribe(topic1);
       client.subscribe(topic2);
-      client.subscribe(topic3);
     } else {
       delay(500);
       Serial.print(".");
@@ -68,24 +76,17 @@ void reconnect() {
   }
 }
 
-void pressButton(){
-  servo.write(110);
-  delay(450);
-  servo.write(90);
-  delay(100);
-  servo.write(45);
-  delay(100);
-  servo.write(90);
-  client.publish(topic3, "recieved");
+void blinkLed() {
+  for (int i = 0; i < 10; i++) {
+    digitalWrite(LED, HIGH);
+  }
 }
 
 void loop() {
   if (!client.connected()) { reconnect(); }
-  char buffer[15];
-  float reading = analogRead(LIGHT_PIN);
-  sprintf(buffer, "%f", reading);
-  client.loop();
-  client.publish(topic1, buffer);
+  if (digitalRead(BUTTON) == HIGH) {
+    client.publish(topic1, "triggerd");
+  }
   client.loop();
   delay(500);
 }

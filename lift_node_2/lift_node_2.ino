@@ -1,28 +1,23 @@
 #include <WiFi.h>
 #include <PubSubClient.h>
 
-#define SERVO_PIN 15
-#define LIGHT_PIN 33
-
-#define SPIN_TIME 400
-
 char mac[17];
 const char* ssid = "GuestWLANPortal";
 const char* mqtt_server = "142.93.174.193";
 
-const char* topic1 = "zuerich/lift/lightsensor2";
+const char* topic1 = "m216demo/lift/sensor2";
+
+#define LIGHT 33
 
 WiFiClient espClient;
 PubSubClient client(espClient);
-
-Servo servo;
 
 void setup() {
   Serial.begin(115200);
   setup_wifi();
   client.setServer(mqtt_server, 1883);
 
-  pinMode(LIGHT_PIN, INPUT);
+  pinMode(LIGHT, INPUT);
 }
 
 void setup_wifi() {
@@ -42,7 +37,7 @@ void setup_wifi() {
 void reconnect() {
   Serial.print("Attempting MQTT connection...");
   while (!client.connected()) {
-    if (client.connect("lift")) {
+    if (client.connect("lift Sensor")) {
       Serial.println("done!");
       client.subscribe(topic1);
     } else {
@@ -54,12 +49,10 @@ void reconnect() {
 
 void loop() {
   if (!client.connected()) { reconnect(); }
-  char buffer[15];
-  float reading = analogRead(LIGHT_PIN);
-  sprintf(buffer, "%f", reading);
-  client.loop();
-  client.publish(topic1, buffer);
-  client.loop();
+  char tempBuffer[15];
+  Serial.println(analogRead(LIGHT));
+  sprintf(tempBuffer, "%f", analogRead(LIGHT));
+  client.publish(topic1, tempBuffer);
   delay(500);
+  client.loop();
 }
-
