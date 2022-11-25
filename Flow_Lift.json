@@ -1,0 +1,283 @@
+[
+    {
+        "id": "bc07bc75fcb4c9ab",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "f3c33fa073d8e0bb",
+        "type": "mqtt in",
+        "z": "bc07bc75fcb4c9ab",
+        "name": "Elevator Right",
+        "topic": "zuerich/lift/lightsensor",
+        "qos": "2",
+        "datatype": "utf8",
+        "broker": "82839d70586b5ca9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 130,
+        "y": 160,
+        "wires": [
+            [
+                "8e5453a86bbcb583"
+            ]
+        ]
+    },
+    {
+        "id": "142c82fad98af563",
+        "type": "ui_text",
+        "z": "bc07bc75fcb4c9ab",
+        "group": "90d07240.50d4f",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "name": "Show Elevator 1 Status",
+        "label": "Elevatot Right",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 630,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "c3c7cf503bd81fc4",
+        "type": "mqtt out",
+        "z": "bc07bc75fcb4c9ab",
+        "name": "",
+        "topic": "zuerich/lift/button",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "82839d70586b5ca9",
+        "x": 1030,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "ae37bbb665c308a7",
+        "type": "ui_button",
+        "z": "bc07bc75fcb4c9ab",
+        "name": "call Button",
+        "group": "90d07240.50d4f",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Lift rufen",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "1",
+        "payloadType": "str",
+        "topic": "",
+        "topicType": "str",
+        "x": 810,
+        "y": 260,
+        "wires": [
+            [
+                "c3c7cf503bd81fc4"
+            ]
+        ]
+    },
+    {
+        "id": "8e5453a86bbcb583",
+        "type": "function",
+        "z": "bc07bc75fcb4c9ab",
+        "name": "Check Elevator 1",
+        "func": "var input = msg.payload;\nif(input > 1000){\n    return {payload: \"Lift ist hier\"}\n} else {\n    return {payload: \"Lift nicht hier\"}\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 140,
+        "wires": [
+            [
+                "142c82fad98af563"
+            ]
+        ]
+    },
+    {
+        "id": "4203f4e19b01fa3c",
+        "type": "ui_toast",
+        "z": "bc07bc75fcb4c9ab",
+        "position": "dialog",
+        "displayTime": "3",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 1,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "topic": "Der Lift wurde gerufen",
+        "name": "Show confermation",
+        "x": 490,
+        "y": 340,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e6b880901b752642",
+        "type": "mqtt in",
+        "z": "bc07bc75fcb4c9ab",
+        "name": "Conformation",
+        "topic": "zuerich/lift/conformation",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "82839d70586b5ca9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 270,
+        "y": 340,
+        "wires": [
+            [
+                "4203f4e19b01fa3c"
+            ]
+        ]
+    },
+    {
+        "id": "7f73f97a4a9fbfd0",
+        "type": "mqtt in",
+        "z": "bc07bc75fcb4c9ab",
+        "name": "Elevator Left",
+        "topic": "zuerich/lift/sensorzwei",
+        "qos": "2",
+        "datatype": "utf8",
+        "broker": "82839d70586b5ca9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 130,
+        "y": 80,
+        "wires": [
+            [
+                "9f454ba44f301f30"
+            ]
+        ]
+    },
+    {
+        "id": "9f454ba44f301f30",
+        "type": "function",
+        "z": "bc07bc75fcb4c9ab",
+        "name": "Check Elevator 2",
+        "func": "var input = msg.payload;\nif(input > 1000){\n    return {payload: \"Lift ist hier\"}\n} else {\n    return {payload: \"Lift nicht hier\"}\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 100,
+        "wires": [
+            [
+                "8bc8ec53b5e10db6"
+            ]
+        ]
+    },
+    {
+        "id": "8bc8ec53b5e10db6",
+        "type": "ui_text",
+        "z": "bc07bc75fcb4c9ab",
+        "group": "90d07240.50d4f",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "name": "Show Elevator 2 Status",
+        "label": "Elevator Left",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 630,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "1d5172864d21b8dd",
+        "type": "comment",
+        "z": "bc07bc75fcb4c9ab",
+        "name": "Gives Confermarion of the Elevator Button pressed",
+        "info": "",
+        "x": 390,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "09296a5bd9a12b64",
+        "type": "comment",
+        "z": "bc07bc75fcb4c9ab",
+        "name": "Sends Command to Press the Buttton",
+        "info": "",
+        "x": 930,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "6fbd8d71cc607f12",
+        "type": "comment",
+        "z": "bc07bc75fcb4c9ab",
+        "name": "Show, if The elevator is here or not for both Elevators",
+        "info": "",
+        "x": 500,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "82839d70586b5ca9",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "142.93.174.193",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    },
+    {
+        "id": "90d07240.50d4f",
+        "type": "ui_group",
+        "name": "Lift Status",
+        "tab": "49f2883.aa81678",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "49f2883.aa81678",
+        "type": "ui_tab",
+        "name": "LoViTi",
+        "icon": "dashboard",
+        "order": 2,
+        "disabled": false,
+        "hidden": false
+    }
+]
